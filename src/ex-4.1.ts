@@ -5,7 +5,7 @@ type User = {
 };
 
 function isAdult(user: User): boolean {
-  return user.age >= 18;
+  return (user.age ?? 0) >= 18;
 }
 
 const result = isAdult({ id: "u01", name: "John" });
