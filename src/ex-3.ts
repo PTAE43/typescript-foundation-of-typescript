@@ -1,4 +1,5 @@
-const ordersSample = [
+//เพิ่ม :Order[]
+const ordersSample: Order[] = [ 
   {
     orderId: "ORD001",
     status: "pending",
@@ -94,15 +95,35 @@ const ordersSample = [
 ];
 
 //Start Coding Here
+type OrderStatus = "pending" | "shipped" | "delivered" | "cancelled";
 
-const totalShipped = totalByStatusWithDiscount(orders, "shipped");
+interface Order {
+  orderId: string;
+  status: OrderStatus;
+  productName: string;
+  price: number;
+  quantity: number;
+  discount?: number;
+}// แก้ error อยู่นานเลย ต้องใช้ type ตัวเล็ก เพราะตัวใหญ่เป็น Object Wrapper
+
+function totalByStatusWithDiscount(orders: Order[], targetStatus: OrderStatus): number {
+  return orders
+    .filter((item) => item.status === targetStatus)
+    .reduce((acc: number, item: Order) => {
+      const discount = item.discount ?? 0; //หักลบ discount (ถ้าไม่มีให้เป็น 0)
+      const total = (item.price * item.quantity) - discount;
+      return acc + total;
+    }, 0);
+};
+
+const totalShipped = totalByStatusWithDiscount(ordersSample , "shipped");
 console.log("Total for shipped orders with discount:", totalShipped);
 
-const totalPending = totalByStatusWithDiscount(orders, "pending");
+const totalPending = totalByStatusWithDiscount(ordersSample , "pending");
 console.log("Total for pending orders:", totalPending);
 
-const totalDelivered = totalByStatusWithDiscount(orders, "delivered");
+const totalDelivered = totalByStatusWithDiscount(ordersSample , "delivered");
 console.log("Total for delivered orders:", totalDelivered);
 
-const totalCancelled = totalByStatusWithDiscount(orders, "cancelled");
+const totalCancelled = totalByStatusWithDiscount(ordersSample , "cancelled");
 console.log("Total for cancelled orders:", totalCancelled);
